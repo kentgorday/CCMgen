@@ -12,7 +12,7 @@ typedef double flt;
 #define flog log
 
 
-#define X1_INDEX(i,a) (i) * (N_ALPHA - 1) + (a)
+#define X1_INDEX(i,a) (i) * (N_ALPHA) + (a)
 #define X2_INDEX(i,a,j,b) (((i) * N_ALPHA + (a)) * ncol + (j)) * N_ALPHA + (b)
 
 #define G1(i,a) g[X1_INDEX(i,a)]

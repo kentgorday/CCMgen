@@ -12,8 +12,8 @@ def center_v(freqs):
     lsingle_freqs = np.log(single_freqs)
 
     #subtract mean of non_gapped frequencies
-    v_center = lsingle_freqs - np.mean(lsingle_freqs[:, :20], axis=1)[:, np.newaxis]
-    v_center[:, 20] = 0
+    v_center = lsingle_freqs - np.mean(lsingle_freqs[:, :21], axis=1)[:, np.newaxis]
+    #v_center[:, 20] = 0
 
     return v_center
 

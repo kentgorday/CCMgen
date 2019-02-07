@@ -64,7 +64,7 @@ def parse_msgpack(f):
     assert(x['format'] == 'ccm-1')
 
     ncol = x['ncol']
-    x_single = np.array(x['x_single']).reshape((ncol, 20))
+    x_single = np.array(x['x_single']).reshape((ncol, 21))
     x_pair = np.zeros((ncol, ncol, 21, 21))
 
     meta = x['meta'] if 'meta' in x else None
@@ -148,7 +148,7 @@ def parse(f):
 @stream_or_file('wb')
 def write_msgpack(f, data):
 
-    x_single = data.x_single.reshape(data.ncol * 20).tolist()
+    x_single = data.x_single.reshape(data.ncol * 21).tolist()
     x_pair = {}
     for i in range(data.ncol):
         for j in range(i + 1, data.ncol):

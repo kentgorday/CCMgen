@@ -581,7 +581,7 @@ class CCMpred():
                     }
 
             if entropy_correction_file is not None and score == "frobenius":
-                nr_states = 20
+                nr_states = 21
                 log = np.log2
 
                 # use amino acid frequencies including gap states and with pseudo-counts
@@ -636,7 +636,7 @@ class CCMpred():
         self.out_binary_raw_file = out_binary_raw_file
         meta = self.create_meta_data()
 
-        raw_out = raw.CCMRaw(self.L, self.x_single[:, :20], self.x_pair[:, :, :21, :21], meta)
+        raw_out = raw.CCMRaw(self.L, self.x_single[:, :21], self.x_pair[:, :, :21, :21], meta)
         print("\nWriting msgpack-formatted potentials to {0}".format(out_binary_raw_file))
         raw.write_msgpack(out_binary_raw_file, raw_out)
 

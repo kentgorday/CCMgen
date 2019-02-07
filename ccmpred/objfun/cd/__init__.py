@@ -26,17 +26,17 @@ class ContrastiveDivergence():
 
         self.structured_to_linear = lambda x_single, x_pair: \
             ccmpred.parameter_handling.structured_to_linear(
-                x_single, x_pair, nogapstate=True, padding=False)
+                x_single, x_pair, nogapstate=False, padding=False)
         self.linear_to_structured = lambda x: \
             ccmpred.parameter_handling.linear_to_structured(
-                x, self.ncol, nogapstate=True, add_gap_state=False, padding=False)
+                x, self.ncol, nogapstate=False, add_gap_state=False, padding=False)
 
 
         self.x_single = x_single
         self.x_pair = x_pair
         self.x = self.structured_to_linear(self.x_single, self.x_pair)
 
-        self.nsingle = self.ncol * 20
+        self.nsingle = self.ncol * 21
         self.npair = self.ncol * self.ncol * 21 * 21
         self.nvar = self.nsingle + self.npair
 
@@ -47,9 +47,9 @@ class ContrastiveDivergence():
         self.msa_counts_pair = self.freqs_pair * self.neff
 
         # reset gap counts
-        self.msa_counts_single[:, 20] = 0
-        self.msa_counts_pair[:, :, :, 20] = 0
-        self.msa_counts_pair[:, :, 20, :] = 0
+        #self.msa_counts_single[:, 20] = 0
+        #self.msa_counts_pair[:, :, :, 20] = 0
+        #self.msa_counts_pair[:, :, 20, :] = 0
 
         # non_gapped counts
         self.Ni = self.msa_counts_single.sum(1)
@@ -121,7 +121,7 @@ class ContrastiveDivergence():
 
     def finalize(self, x):
         return ccmpred.parameter_handling.linear_to_structured(
-            x, self.ncol, clip=False, nogapstate=True, add_gap_state=True, padding=False
+            x, self.ncol, clip=False, nogapstate=False, add_gap_state=False, padding=False
         )
 
     def evaluate(self, x, persistent=False):
@@ -145,8 +145,10 @@ class ContrastiveDivergence():
                 remove_gaps=False)
 
         #compute frequencies excluding gap counts
-        sampled_freq_single = pseudocounts.degap(pseudocounts.freqs[0], True)
-        sampled_freq_pair   = pseudocounts.degap(pseudocounts.freqs[1], True)
+        #sampled_freq_single = pseudocounts.degap(pseudocounts.freqs[0], True)
+        #sampled_freq_pair   = pseudocounts.degap(pseudocounts.freqs[1], True)
+        sampled_freq_single = pseudocounts.freqs[0]
+        sampled_freq_pair = pseudocounts.freqs[1]
 
 
         #compute counts and scale them accordingly to size of original MSA
@@ -158,15 +160,15 @@ class ContrastiveDivergence():
         g_pair = sample_counts_pair - self.msa_counts_pair
 
         #sanity check
-        if(np.abs(np.sum(sample_counts_single[1,:20]) - np.sum(self.msa_counts_single[1,:20])) > 1e-5):
+        if(np.abs(np.sum(sample_counts_single[1,:21]) - np.sum(self.msa_counts_single[1,:21])) > 1e-5):
             print("Warning: sample aa counts ({0}) do not equal input msa aa counts ({1})!".format(
-                np.sum(sample_counts_single[1,:20]), np.sum(self.msa_counts_single[1,:20]))
+                np.sum(sample_counts_single[1,:21]), np.sum(self.msa_counts_single[1,:21]))
             )
 
         # set gradients for gap states to 0
-        g_single[:, 20] = 0
-        g_pair[:, :, :, 20] = 0
-        g_pair[:, :, 20, :] = 0
+        #g_single[:, 20] = 0
+        #g_pair[:, :, :, 20] = 0
+        #g_pair[:, :, 20, :] = 0
 
         # set diagonal elements to 0
         for i in range(self.ncol):
@@ -177,8 +179,8 @@ class ContrastiveDivergence():
         _, g_single_reg, g_pair_reg = self.regularization(x_single, x_pair) #g_single_reg has dim L x 20
 
         #gradient for x_single only L x 20
-        g = self.structured_to_linear(g_single[:, :20], g_pair)
-        g_reg = self.structured_to_linear(g_single_reg[:, :20], g_pair_reg)
+        g = self.structured_to_linear(g_single[:, :21], g_pair)
+        g_reg = self.structured_to_linear(g_single_reg[:, :21], g_pair_reg)
 
         return -1, g, g_reg
 

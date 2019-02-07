@@ -29,13 +29,13 @@ void compute_conditional_probs(
 	const int ncol
 ) {
 	int a, j;
-	int nsingle = ncol * (N_ALPHA - 1);
+	int nsingle = ncol * (N_ALPHA);
 
-	for (a = 0; a < N_ALPHA - 1; a++) {
+	for (a = 0; a < N_ALPHA; a++) {
 		cond_probs[a] = E1(i,a);
 	}
 
-	for (a = 0; a < N_ALPHA - 1; a++) {
+	for (a = 0; a < N_ALPHA; a++) {
 		for (j = 0; j < ncol; j++) {
 			cond_probs[a] += E2(i, a, j, last_seq[j]);
 		}
@@ -44,15 +44,15 @@ void compute_conditional_probs(
 		cond_probs[a] -= E2(i, a, i, last_seq[i]);
 	}
 
-	cond_probs[GAP] = F0;
+	// cond_probs[GAP] = F0;
 
 	flt denom = F0;
-	for (a = 0; a < N_ALPHA - 1; a++) {
+	for (a = 0; a < N_ALPHA; a++) {
 		cond_probs[a] = fexp(cond_probs[a]);
 		denom += cond_probs[a];
 	}
 
-	for (a = 0; a < N_ALPHA - 1; a++) {
+	for (a = 0; a < N_ALPHA; a++) {
 		cond_probs[a] /= denom;
 	}
 }
@@ -87,7 +87,7 @@ void sample_position_in_sequences(
 			} while(seq[k * ncol + i] == GAP);
 
 			compute_conditional_probs(i, pcondcurr, x, &seq[k * ncol], ncol);
-			seq[k * ncol + i] = pick_random_weighted(pcondcurr, N_ALPHA - 1);
+			seq[k * ncol + i] = pick_random_weighted(pcondcurr, N_ALPHA);
 
 		}
 		fl_free(pcondcurr);
@@ -128,10 +128,10 @@ void gibbs_sample_sequences(
 				shuffle(sequence_position_vector, ncol);
 
 				for (i=0; i < ncol; i++){
-					if (seq[k * ncol + sequence_position_vector[i]] != GAP){
+					//if (seq[k * ncol + sequence_position_vector[i]] != GAP){
 						compute_conditional_probs(sequence_position_vector[i], pcondcurr, x, &seq[k * ncol], ncol);
-						seq[k * ncol + sequence_position_vector[i]] = pick_random_weighted(pcondcurr, N_ALPHA - 1);
-					}
+						seq[k * ncol + sequence_position_vector[i]] = pick_random_weighted(pcondcurr, N_ALPHA);
+					//}
 
 				}
 			}
@@ -170,7 +170,7 @@ void gibbs_sample_sequences_nogaps(
 
 				for (i=0; i < ncol; i++){
 					compute_conditional_probs(sequence_position_vector[i], pcondcurr, x, &seq[k * ncol], ncol);
-					seq[k * ncol + sequence_position_vector[i]] = pick_random_weighted(pcondcurr, N_ALPHA - 1);
+					seq[k * ncol + sequence_position_vector[i]] = pick_random_weighted(pcondcurr, N_ALPHA);
 				}
 			}
 		}

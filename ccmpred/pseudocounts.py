@@ -39,7 +39,7 @@ class PseudoCounts(object):
             single_counts, pair_counts = self.counts
 
         # reset gap counts
-        single_counts[:, 20] = 0
+        #single_counts[:, 20] = 0
 
         Ni = single_counts.sum(1)
 
@@ -54,8 +54,8 @@ class PseudoCounts(object):
             single_counts, pair_counts = self.counts
 
         # reset gap counts
-        pair_counts[:, :, :, 20] = 0
-        pair_counts[:, :, 20, :] = 0
+        #pair_counts[:, :, :, 20] = 0
+        #pair_counts[:, :, 20, :] = 0
 
         # non_gapped counts
         Nij = pair_counts.sum(3).sum(2)
@@ -70,10 +70,10 @@ class PseudoCounts(object):
         single_freq = single_counts / self.neff
 
         #single freq counts normalized without gaps
-        single_freq = self.degap(single_freq, True)
+        #single_freq = self.degap(single_freq, True)
 
 
-        return np.mean(single_freq[:, :20], axis=0)[np.newaxis, :][0]
+        return np.mean(single_freq[:, :21], axis=0)[np.newaxis, :][0]
 
     def calculate_frequencies(self, pseudocount_type, pseudocount_n_single=1, pseudocount_n_pair=None, remove_gaps=False):
 

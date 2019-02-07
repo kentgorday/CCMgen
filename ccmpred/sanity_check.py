@@ -43,11 +43,11 @@ def centering_potentials( x_single, x_pair):
     :return:
     """
 
-    means = np.mean(np.mean(x_pair[:, :, :20, :20], axis=2), axis=2)
-    x_pair[:, :, :20, :20] -=  means[:, :, np.newaxis, np.newaxis]
+    means = np.mean(np.mean(x_pair[:, :, :21, :21], axis=2), axis=2)
+    x_pair[:, :, :21, :21] -=  means[:, :, np.newaxis, np.newaxis]
 
-    means = np.mean(x_single[: , :20], axis=1)
-    x_single[: , :20] -= means[:, np.newaxis]
+    means = np.mean(x_single[: , :21], axis=1)
+    x_single[: , :21] -= means[:, np.newaxis]
 
 
     return x_single, x_pair
