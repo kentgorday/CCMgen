@@ -151,7 +151,7 @@ def main():
 
     #read potentials from binary raw file (possibly remove positions with many gaps)
     ccm.intialise_potentials()
-    x = ccmpred.parameter_handling.structured_to_linear(ccm.x_single, ccm.x_pair, nogapstate=True, padding=False)
+    x = ccmpred.parameter_handling.structured_to_linear(ccm.x_single, ccm.x_pair, nogapstate=False, padding=False)
     ncol = ccm.x_single.shape[0]
 
 
